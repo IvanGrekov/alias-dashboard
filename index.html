@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alias Host App</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Host tool</p>
+        <h1>Alias Host App</h1>
+      </div>
+      <div class="header-badge">2–6 players · 1–3 rounds · 14 words each</div>
+    </header>
+
+    <main>
+      <section id="setup-screen" class="screen active">
+        <div class="panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Step 1</p>
+              <h2>Перед грою</h2>
+            </div>
+            <button id="reset-setup-btn" class="ghost-btn" type="button">Clear setup</button>
+          </div>
+
+          <div class="setup-grid">
+            <div class="card">
+              <h3>Гравці</h3>
+              <p class="muted">Введи імена гравців. Мінімум 2, максимум 6.</p>
+              <div id="player-inputs" class="player-inputs"></div>
+              <div class="button-row">
+                <button id="add-player-btn" class="secondary-btn" type="button">+ Add player</button>
+                <button id="remove-player-btn" class="secondary-btn" type="button">− Remove player</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Раунди</h3>
+              <p class="muted">Обери кількість раундів.</p>
+              <label class="field-label" for="rounds-count">Кількість раундів</label>
+              <select id="rounds-count">
+                <option value="1">1 round</option>
+                <option value="2">2 rounds</option>
+                <option value="3" selected>3 rounds</option>
+              </select>
+
+              <ul id="round-legend" class="round-legend"></ul>
+
+              <div class="info-box" id="expected-sets-box">
+                4 players × 3 rounds = 12 word sets
+              </div>
+
+              <button id="build-word-fields-btn" class="primary-btn full-width" type="button">
+                Create word fields
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="words-panel" class="panel hidden">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Step 2</p>
+              <h2>Слова</h2>
+            </div>
+            <span id="word-sets-progress" class="pill">0/0 valid sets</span>
+          </div>
+
+          <p class="muted">
+            Для кожного гравця в кожному раунді введи рівно 14 слів.
+            Розділювачі: кома, крапка, крапка з комою або новий рядок.
+          </p>
+
+          <details class="prompt-card">
+            <summary>
+              <span>
+                <strong>Промпт для генерації слів</strong>
+                <span class="muted">Згенеруй усі набори слів за допомогою AI-асистента</span>
+              </span>
+              <button id="copy-prompt-btn" class="secondary-btn" type="button">Copy prompt</button>
+            </summary>
+            <p class="muted">
+              Кількість гравців і раундів уже підставлена з твоїх налаштувань.
+              Встав промпт у AI-асистента й отримай готові набори слів.
+            </p>
+            <textarea id="prompt-text" class="prompt-text" readonly spellcheck="false"></textarea>
+          </details>
+
+          <div id="word-fields" class="word-fields"></div>
+
+          <div id="validation-summary" class="validation-summary hidden"></div>
+
+          <div class="sticky-actions">
+            <button id="start-game-btn" class="primary-btn" type="button">Start game</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen">
+        <div class="game-layout">
+          <aside class="side-column">
+            <div class="panel compact">
+              <div class="section-heading tight">
+                <div>
+                  <p class="eyebrow">Score</p>
+                  <h2>Рахунок</h2>
+                </div>
+              </div>
+              <div id="scoreboard" class="scoreboard"></div>
+            </div>
+
+            <div class="panel compact">
+              <div class="section-heading tight">
+                <div>
+                  <p class="eyebrow">Order</p>
+                  <h2>Порядок</h2>
+                </div>
+              </div>
+              <div id="turn-order" class="turn-order"></div>
+            </div>
+
+            <div class="panel compact">
+              <div class="section-heading tight">
+                <div>
+                  <p class="eyebrow">Log</p>
+                  <h2>Останні події</h2>
+                </div>
+              </div>
+              <div id="event-log" class="event-log"></div>
+            </div>
+          </aside>
+
+          <section class="main-column">
+            <div id="game-panel" class="panel"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
