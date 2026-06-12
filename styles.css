@@ -368,6 +368,15 @@ textarea:focus {
   line-height: 1.5;
 }
 
+.prompt-text.compact {
+  min-height: 96px;
+}
+
+.turn-words-card {
+  margin: 16px 0;
+  text-align: left;
+}
+
 .info-box {
   margin: 16px 0;
   border: 1px solid rgba(30, 94, 255, 0.2);

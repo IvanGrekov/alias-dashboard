@@ -327,7 +327,8 @@ function updateExpectedSets() {
   dom.expectedSetsBox.textContent = `${playerCount} players × ${roundsCount} rounds = ${sets} word sets`;
 
   updateRoundLegend(roundsCount);
-  dom.promptText.value = buildWordsPrompt(playerCount, roundsCount);
+  const enteredNames = rawNames.map(input => normalizeSpaces(input.value));
+  dom.promptText.value = buildWordsPrompt(playerCount, roundsCount, enteredNames);
   saveSetupDraft();
 }
 
@@ -347,36 +348,41 @@ function updateRoundLegend(roundsCount) {
 }
 
 function copyWordsPrompt(event) {
+  copyTextareaToClipboard(event, dom.promptText, dom.copyPromptBtn, "Copy prompt");
+}
+
+function copyTextareaToClipboard(event, textarea, button, idleLabel) {
   // The button lives inside <summary>: without preventDefault the click also toggles the <details>.
   event.preventDefault();
   event.stopPropagation();
 
-  const prompt = dom.promptText.value;
-
   const showCopied = () => {
-    dom.copyPromptBtn.textContent = "Copied!";
+    button.textContent = "Copied!";
     window.setTimeout(() => {
-      dom.copyPromptBtn.textContent = "Copy prompt";
+      button.textContent = idleLabel;
     }, 1500);
   };
 
-  if (navigator.clipboard?.writeText) {
-    navigator.clipboard.writeText(prompt).then(showCopied).catch(() => {
-      dom.promptText.select();
-      document.execCommand("copy");
-      showCopied();
-    });
-  } else {
-    dom.promptText.select();
+  const copyViaSelection = () => {
+    textarea.select();
     document.execCommand("copy");
     showCopied();
+  };
+
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(textarea.value).then(showCopied).catch(copyViaSelection);
+  } else {
+    copyViaSelection();
   }
 }
 
-function buildWordsPrompt(playerCount, roundsCount) {
+function buildWordsPrompt(playerCount, roundsCount, playerNames = []) {
   const wordsPerSet = CONFIG.wordsPerPlayerPerRound;
   const totalWords = playerCount * roundsCount * wordsPerSet;
-  const defaultPlayersList = Array.from({ length: playerCount }, (_, i) => `Гравець ${i + 1}`).join("\n");
+  const playersList = Array.from(
+    { length: playerCount },
+    (_, i) => `${i + 1} - ${playerNames[i] || `Гравець ${i + 1}`}`
+  ).join("\n");
   const ukWordsLine = Array.from({ length: wordsPerSet }, (_, i) => `слово${i + 1}`).join(", ");
   const enWordsLine = Array.from({ length: wordsPerSet }, (_, i) => `word${i + 1}`).join(", ");
 
@@ -387,10 +393,8 @@ function buildWordsPrompt(playerCount, roundsCount) {
 Кількість гравців: ${playerCount}
 Кількість раундів: ${roundsCount}
 
-Імена гравців вказувати не обовʼязково.
-Якщо імена гравців не вказані, використовуй стандартні позначення:
-
-${defaultPlayersList}
+Імена гравців:
+${playersList}
 
 Використовуй тільки стільки гравців, скільки вказано в параметрі “Кількість гравців”.
 
@@ -449,10 +453,10 @@ ${defaultPlayersList}
 
 Раунд 1 — Українські слова, різні тематики
 
-[Гравець 1 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 1]:
 ${ukWordsLine}
 
-[Гравець 2 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 2]:
 ${ukWordsLine}
 
 [І так далі для всіх гравців]
@@ -462,10 +466,10 @@ ${ukWordsLine}
 
 Раунд 1 — Українські слова, різні тематики
 
-[Гравець 1 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 1]:
 ${ukWordsLine}
 
-[Гравець 2 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 2]:
 ${ukWordsLine}
 
 [І так далі для всіх гравців]
@@ -473,10 +477,10 @@ ${ukWordsLine}
 
 Раунд 2 — Українські слова, тематика: [назва тематики]
 
-[Гравець 1 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 1]:
 ${ukWordsLine}
 
-[Гравець 2 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 2]:
 ${ukWordsLine}
 
 [І так далі для всіх гравців]
@@ -486,10 +490,10 @@ ${ukWordsLine}
 
 Раунд 1 — Українські слова, різні тематики
 
-[Гравець 1 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 1]:
 ${ukWordsLine}
 
-[Гравець 2 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 2]:
 ${ukWordsLine}
 
 [І так далі для всіх гравців]
@@ -497,10 +501,10 @@ ${ukWordsLine}
 
 Раунд 2 — Українські слова, тематика: [назва тематики]
 
-[Гравець 1 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 1]:
 ${ukWordsLine}
 
-[Гравець 2 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 2]:
 ${ukWordsLine}
 
 [І так далі для всіх гравців]
@@ -508,10 +512,10 @@ ${ukWordsLine}
 
 Round 3 — English words, mixed topics, B1–B2 level
 
-[Player 1 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 1]:
 ${enWordsLine}
 
-[Player 2 або імʼя гравця, якщо воно було вказане]:
+[Імʼя гравця 2]:
 ${enWordsLine}
 
 [І так далі для всіх гравців]
@@ -836,7 +840,10 @@ function renderGame() {
 }
 
 function renderScoreboard() {
-  const sorted = [...state.players].sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+  // Ties (including the 0:0 start) follow turn order so the scoreboard matches the "Order" panel.
+  const sorted = [...state.players].sort(
+    (a, b) => b.score - a.score || state.order.indexOf(a.id) - state.order.indexOf(b.id)
+  );
 
   dom.scoreboard.innerHTML = sorted.map(player => {
     const isCurrent = getCurrentExplainer()?.id === player.id;
@@ -908,6 +915,7 @@ function renderMainGamePanel() {
 
 function renderBetweenTurnsPanel() {
   const explainer = getCurrentExplainer();
+  const turnWords = state.wordSets[state.currentRoundIndex]?.[explainer?.id] || [];
 
   dom.gamePanel.innerHTML = `
     ${renderStatusCards()}
@@ -918,6 +926,18 @@ function renderBetweenTurnsPanel() {
         Раунд ${state.currentRoundIndex + 1}/${state.roundsCount}.
         Натисни Start turn, коли гравець готовий.
       </p>
+      ${turnWords.length ? `
+        <details class="prompt-card turn-words-card">
+          <summary>
+            <span>
+              <strong>Слова цього ходу</strong>
+              <span class="muted">Скопіюй набір слів ${escapeHtml(explainer.name)} для Round ${state.currentRoundIndex + 1}</span>
+            </span>
+            <button id="copy-turn-words-btn" class="secondary-btn" type="button">Copy words</button>
+          </summary>
+          <textarea id="turn-words-text" class="prompt-text compact" readonly spellcheck="false">${turnWords.map(word => escapeHtml(word)).join(", ")}</textarea>
+        </details>
+      ` : ""}
       <div class="control-row">
         <button id="start-turn-btn" class="primary-btn big-action" type="button">Start turn</button>
         ${renderUndoButtonIfAvailable()}
@@ -926,6 +946,14 @@ function renderBetweenTurnsPanel() {
     </div>
   `;
 
+  document.getElementById("copy-turn-words-btn")?.addEventListener("click", event => {
+    copyTextareaToClipboard(
+      event,
+      document.getElementById("turn-words-text"),
+      document.getElementById("copy-turn-words-btn"),
+      "Copy words"
+    );
+  });
   document.getElementById("start-turn-btn").addEventListener("click", startTurn);
   document.getElementById("undo-last-score-btn")?.addEventListener("click", undoLastScore);
   document.getElementById("finish-game-btn").addEventListener("click", endGameEarly);
