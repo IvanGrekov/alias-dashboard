@@ -279,7 +279,7 @@ function renderPlayerInputs(existingNames = []) {
     const input = document.createElement("input");
     input.type = "text";
     input.className = "player-name-input";
-    input.placeholder = `Player ${i + 1}`;
+    input.placeholder = `Гравець ${i + 1}`;
     input.value = existingNames[i] || "";
 
     input.addEventListener("input", () => {
@@ -324,7 +324,7 @@ function updateExpectedSets() {
   const roundsCount = Number(dom.roundsCount.value);
   const sets = playerCount * roundsCount;
 
-  dom.expectedSetsBox.textContent = `${playerCount} players × ${roundsCount} rounds = ${sets} word sets`;
+  dom.expectedSetsBox.textContent = `${playerCount} гравців × ${roundsCount} раундів = ${sets} наборів слів`;
 
   updateRoundLegend(roundsCount);
   const enteredNames = rawNames.map(input => normalizeSpaces(input.value));
@@ -348,7 +348,7 @@ function updateRoundLegend(roundsCount) {
 }
 
 function copyWordsPrompt(event) {
-  copyTextareaToClipboard(event, dom.promptText, dom.copyPromptBtn, "Copy prompt");
+  copyTextareaToClipboard(event, dom.promptText, dom.copyPromptBtn, "Копіювати промпт");
 }
 
 function copyTextareaToClipboard(event, textarea, button, idleLabel) {
@@ -357,7 +357,7 @@ function copyTextareaToClipboard(event, textarea, button, idleLabel) {
   event.stopPropagation();
 
   const showCopied = () => {
-    button.textContent = "Copied!";
+    button.textContent = "Скопійовано!";
     window.setTimeout(() => {
       button.textContent = idleLabel;
     }, 1500);
@@ -384,7 +384,7 @@ function buildWordsPrompt(playerCount, roundsCount, playerNames = []) {
     (_, i) => `${i + 1} - ${playerNames[i] || `Гравець ${i + 1}`}`
   ).join("\n");
   const ukWordsLine = Array.from({ length: wordsPerSet }, (_, i) => `слово${i + 1}`).join(", ");
-  const enWordsLine = Array.from({ length: wordsPerSet }, (_, i) => `word${i + 1}`).join(", ");
+  const enWordsLine = Array.from({ length: wordsPerSet }, (_, i) => `англійське_слово${i + 1}`).join(", ");
 
   return `Згенеруй слова для гри Alias у форматі, зручному для копіювання в застосунок ведучого.
 
@@ -510,7 +510,7 @@ ${ukWordsLine}
 [І так далі для всіх гравців]
 
 
-Round 3 — English words, mixed topics, B1–B2 level
+Раунд 3 — Англійські слова, різні тематики, рівень B1–B2
 
 [Імʼя гравця 1]:
 ${enWordsLine}
@@ -561,8 +561,8 @@ function buildWordFields() {
     const roundTitle = document.createElement("div");
     roundTitle.className = "round-title";
     roundTitle.innerHTML = `
-      <strong>Round ${roundIndex + 1} · ${ROUND_DESCRIPTIONS[roundIndex]}</strong>
-      <span class="muted">${playerNames.length} sets × ${CONFIG.wordsPerPlayerPerRound} words</span>
+      <strong>Раунд ${roundIndex + 1} · ${ROUND_DESCRIPTIONS[roundIndex]}</strong>
+      <span class="muted">${playerNames.length} наборів × ${CONFIG.wordsPerPlayerPerRound} слів</span>
     `;
 
     const grid = document.createElement("div");
@@ -579,7 +579,7 @@ function buildWordFields() {
           <span class="counter" data-counter-for="${id}">0/${CONFIG.wordsPerPlayerPerRound}</span>
         </div>
         <label class="field-label" for="${id}">
-          Round ${roundIndex + 1} · ${escapeHtml(name)}
+          Раунд ${roundIndex + 1} · ${escapeHtml(name)}
         </label>
         <textarea
           id="${id}"
@@ -627,7 +627,7 @@ function updateWordCounters() {
     }
   });
 
-  dom.wordSetsProgress.textContent = `${validCount}/${textareas.length} valid sets`;
+  dom.wordSetsProgress.textContent = `Готові набори: ${validCount}/${textareas.length}`;
   saveSetupDraft();
 }
 
@@ -725,7 +725,7 @@ function collectWordData(playerNames, roundsCount) {
 
       if (words.length !== CONFIG.wordsPerPlayerPerRound) {
         errors.push(
-          `Round ${roundIndex + 1}, ${name}: потрібно рівно ${CONFIG.wordsPerPlayerPerRound} слів, зараз ${words.length}.`
+          `Раунд ${roundIndex + 1}, ${name}: потрібно рівно ${CONFIG.wordsPerPlayerPerRound} слів, зараз ${words.length}.`
         );
       }
 
@@ -735,7 +735,7 @@ function collectWordData(playerNames, roundsCount) {
         allWords.push({
           original: word,
           normalized: normalizeForDuplicateCheck(word),
-          location: `Round ${roundIndex + 1}, ${name}`
+          location: `Раунд ${roundIndex + 1}, ${name}`
         });
       });
     });
@@ -874,7 +874,7 @@ function renderTurnOrder() {
           ${renderAvatar(player)}
           <div>
             <div class="player-name">${index + 1}. ${escapeHtml(player.name)}</div>
-            <div class="player-meta">${isDone ? "Done in this round" : isActive ? "Current" : "Waiting"}</div>
+            <div class="player-meta">${isDone ? "Завершив хід у цьому раунді" : isActive ? "Зараз грає" : "Очікує"}</div>
           </div>
         </div>
       </div>
@@ -920,28 +920,28 @@ function renderBetweenTurnsPanel() {
   dom.gamePanel.innerHTML = `
     ${renderStatusCards()}
     <div class="between-card">
-      <p class="eyebrow">Ready</p>
+      <p class="eyebrow">Готово</p>
       <h2>Наступний пояснює: ${renderInlinePlayer(explainer)}</h2>
       <p class="muted">
         Раунд ${state.currentRoundIndex + 1}/${state.roundsCount}.
-        Натисни Start turn, коли гравець готовий.
+        Натисни “Почати хід”, коли гравець готовий.
       </p>
       ${turnWords.length ? `
         <details class="prompt-card turn-words-card">
           <summary>
             <span>
               <strong>Слова цього ходу</strong>
-              <span class="muted">Скопіюй набір слів ${escapeHtml(explainer.name)} для Round ${state.currentRoundIndex + 1}</span>
+              <span class="muted">Скопіюй набір слів ${escapeHtml(explainer.name)} для раунду ${state.currentRoundIndex + 1}</span>
             </span>
-            <button id="copy-turn-words-btn" class="secondary-btn" type="button">Copy words</button>
+            <button id="copy-turn-words-btn" class="secondary-btn" type="button">Копіювати слова</button>
           </summary>
           <textarea id="turn-words-text" class="prompt-text compact" readonly spellcheck="false">${turnWords.map(word => escapeHtml(word)).join(", ")}</textarea>
         </details>
       ` : ""}
       <div class="control-row">
-        <button id="start-turn-btn" class="primary-btn big-action" type="button">Start turn</button>
+        <button id="start-turn-btn" class="primary-btn big-action" type="button">Почати хід</button>
         ${renderUndoButtonIfAvailable()}
-        <button id="finish-game-btn" class="danger-btn" type="button">Finish game</button>
+        <button id="finish-game-btn" class="danger-btn" type="button">Завершити гру</button>
       </div>
     </div>
   `;
@@ -951,7 +951,7 @@ function renderBetweenTurnsPanel() {
       event,
       document.getElementById("turn-words-text"),
       document.getElementById("copy-turn-words-btn"),
-      "Copy words"
+      "Копіювати слова"
     );
   });
   document.getElementById("start-turn-btn").addEventListener("click", startTurn);
@@ -963,13 +963,13 @@ function renderRoundEndedPanel() {
   dom.gamePanel.innerHTML = `
     ${renderStatusCards()}
     <div class="between-card">
-      <p class="eyebrow">Round complete</p>
+      <p class="eyebrow">Раунд завершено</p>
       <h2>Раунд ${state.currentRoundIndex + 1} завершено</h2>
       <p class="muted">Усі гравці зробили хід у цьому раунді.</p>
       <div class="control-row">
-        <button id="start-new-round-btn" class="primary-btn big-action" type="button">Start new round</button>
+        <button id="start-new-round-btn" class="primary-btn big-action" type="button">Почати новий раунд</button>
         ${renderUndoButtonIfAvailable()}
-        <button id="finish-game-btn" class="danger-btn" type="button">Finish game</button>
+        <button id="finish-game-btn" class="danger-btn" type="button">Завершити гру</button>
       </div>
     </div>
   `;
@@ -992,24 +992,24 @@ function renderActiveTurnPanel() {
       <div class="presenter-line">
         ${renderAvatar(explainer)}
         <div>
-          <p class="eyebrow">${isExtra ? "Extra minute" : isPaused ? "Paused" : "Main time"}</p>
+          <p class="eyebrow">${isExtra ? "Додаткова хвилина" : isPaused ? "Пауза" : "Основний час"}</p>
           <h2>${escapeHtml(explainer.name)} пояснює</h2>
         </div>
       </div>
 
       <div class="current-word">
         <div>
-          <small>Word ${state.currentWordIndex + 1}/${CONFIG.wordsPerPlayerPerRound}</small>
+          <small>Слово ${state.currentWordIndex + 1}/${CONFIG.wordsPerPlayerPerRound}</small>
           <strong>${escapeHtml(currentWord || "—")}</strong>
         </div>
       </div>
 
       <div class="timer-row">
         <div>
-          <div class="status-label">Timer</div>
+          <div class="status-label">Таймер</div>
           <div id="timer-display" class="timer ${isExtra ? "extra" : ""} ${isPaused ? "paused" : ""}">${formatTime(state.timeLeft)}</div>
         </div>
-        <div class="pill">${isExtra ? "Only current word can be finished" : isPaused ? "Гру призупинено" : "New words are allowed"}</div>
+        <div class="pill">${isExtra ? "Можна завершити лише поточне слово" : isPaused ? "Гру призупинено" : "Можна брати нові слова"}</div>
       </div>
 
       <div>
@@ -1033,15 +1033,15 @@ function renderActiveTurnPanel() {
       <div class="control-row">
         ${isExtra ? "" : `
           <button id="pause-turn-btn" class="secondary-btn" type="button">
-            ${isPaused ? "▶ Resume" : "⏸ Pause"}
+            ${isPaused ? "▶ Продовжити" : "⏸ Пауза"}
           </button>
         `}
-        <button id="skip-word-btn" class="secondary-btn" type="button" ${isPaused ? "disabled" : ""}>Skip word</button>
+        <button id="skip-word-btn" class="secondary-btn" type="button" ${isPaused ? "disabled" : ""}>Пропустити слово</button>
         <button id="undo-last-score-btn" class="secondary-btn" type="button" ${state.lastScoreSnapshot ? "" : "disabled"}>
-          Undo last score
+          Скасувати останні бали
         </button>
-        <button id="end-turn-btn" class="danger-btn" type="button">End turn</button>
-        <button id="finish-game-btn" class="danger-btn" type="button">Finish game</button>
+        <button id="end-turn-btn" class="danger-btn" type="button">Завершити хід</button>
+        <button id="finish-game-btn" class="danger-btn" type="button">Завершити гру</button>
       </div>
     </div>
   `;
@@ -1072,13 +1072,13 @@ function renderFinalPanel() {
 
   dom.gamePanel.innerHTML = `
     <div class="final-card">
-      <p class="eyebrow">Game complete</p>
+      <p class="eyebrow">Гру завершено</p>
       <h2>Фінальний результат</h2>
 
       <div class="winner-box">
         ${winners.length === 1
-          ? `Переможець: ${escapeHtml(winners[0].name)} · ${winners[0].score} points`
-          : `Нічия: ${winners.map(player => escapeHtml(player.name)).join(", ")} · ${maxScore} points`}
+          ? `Переможець: ${escapeHtml(winners[0].name)} · ${winners[0].score} балів`
+          : `Нічия: ${winners.map(player => escapeHtml(player.name)).join(", ")} · ${maxScore} балів`}
       </div>
 
       <div class="final-table">
@@ -1089,7 +1089,7 @@ function renderFinalPanel() {
               ${renderAvatar(item.player)}
               <div>
                 <div class="player-name">${escapeHtml(item.player.name)}</div>
-                <div class="player-meta">Final place</div>
+                <div class="player-meta">Фінальне місце</div>
               </div>
             </div>
             <div class="score-value">${item.player.score}</div>
@@ -1098,7 +1098,7 @@ function renderFinalPanel() {
       </div>
 
       <div class="control-row">
-        <button id="start-new-game-btn" class="primary-btn big-action" type="button">Start new game</button>
+        <button id="start-new-game-btn" class="primary-btn big-action" type="button">Почати нову гру</button>
         ${renderUndoButtonIfAvailable()}
       </div>
     </div>
@@ -1151,7 +1151,7 @@ function logPlayer(player) {
 
 function renderUndoButtonIfAvailable() {
   if (!state.lastScoreSnapshot) return "";
-  return `<button id="undo-last-score-btn" class="secondary-btn" type="button">Undo last score</button>`;
+  return `<button id="undo-last-score-btn" class="secondary-btn" type="button">Скасувати останні бали</button>`;
 }
 
 function endGameEarly() {
@@ -1191,7 +1191,7 @@ function startTurn() {
   state.lastScoreSnapshot = null;
   state.phase = "running";
   state.isPaused = false;
-  state.log.push(`Старт ходу: ${logPlayer(getCurrentExplainer())}, Round ${state.currentRoundIndex + 1}.`);
+  state.log.push(`Старт ходу: ${logPlayer(getCurrentExplainer())}, раунд ${state.currentRoundIndex + 1}.`);
 
   renderGame();
   startTimer(CONFIG.mainSeconds, handleMainTimerFinished);
@@ -1205,7 +1205,7 @@ function startNewRound() {
   state.currentWordIndex = 0;
   state.lastScoreSnapshot = null;
   state.phase = "between-turns";
-  state.log.push(`Старт Round ${state.currentRoundIndex + 1}.`);
+  state.log.push(`Старт раунду ${state.currentRoundIndex + 1}.`);
 
   renderGame();
 }
@@ -1249,19 +1249,24 @@ function handleGuess(guesserId) {
 function skipWord() {
   if (!["running", "extra"].includes(state.phase) || state.isPaused) return;
 
+  const explainer = getCurrentExplainer();
+  if (!explainer) return;
+
+  const snapshot = takeSnapshot();
   const skippedWord = getCurrentWord();
-  state.log.push(`Слово “${escapeHtml(skippedWord)}” пропущено.`);
-  state.lastScoreSnapshot = null;
+  explainer.score -= 2;
+  state.lastScoreSnapshot = snapshot;
+  state.log.push(`Слово “${escapeHtml(skippedWord)}” пропущено. ${logPlayer(explainer)} -2.`);
 
   if (state.phase === "extra") {
-    advanceAfterTurn({ keepUndo: false });
+    advanceAfterTurn({ keepUndo: true });
     return;
   }
 
   state.currentWordIndex += 1;
 
   if (state.currentWordIndex >= CONFIG.wordsPerPlayerPerRound) {
-    advanceAfterTurn({ keepUndo: false });
+    advanceAfterTurn({ keepUndo: true });
     return;
   }
 
@@ -1310,7 +1315,7 @@ function advanceAfterTurn({ keepUndo }) {
       state.log.push("Гру завершено.");
     } else {
       state.phase = "round-ended";
-      state.log.push(`Round ${state.currentRoundIndex + 1} завершено.`);
+      state.log.push(`Раунд ${state.currentRoundIndex + 1} завершено.`);
     }
   } else {
     state.phase = "between-turns";

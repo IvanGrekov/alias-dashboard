@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Alias Host App</title>
+  <title>Ведучий Alias</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="app-header">
       <div>
-        <p class="eyebrow">Host tool</p>
-        <h1>Alias Host App</h1>
+        <p class="eyebrow">Інструмент ведучого</p>
+        <h1>Ведучий Alias</h1>
       </div>
-      <div class="header-badge">2–6 players · 1–3 rounds · 14 words each</div>
+      <div class="header-badge">2–6 гравців · 1–3 раунди · 14 слів кожному</div>
     </header>
 
     <main>
@@ -21,10 +21,10 @@
         <div class="panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Step 1</p>
+              <p class="eyebrow">Крок 1</p>
               <h2>Перед грою</h2>
             </div>
-            <button id="reset-setup-btn" class="ghost-btn" type="button">Clear setup</button>
+            <button id="reset-setup-btn" class="ghost-btn" type="button">Очистити налаштування</button>
           </div>
 
           <div class="setup-grid">
@@ -33,8 +33,8 @@
               <p class="muted">Введи імена гравців. Мінімум 2, максимум 6.</p>
               <div id="player-inputs" class="player-inputs"></div>
               <div class="button-row">
-                <button id="add-player-btn" class="secondary-btn" type="button">+ Add player</button>
-                <button id="remove-player-btn" class="secondary-btn" type="button">− Remove player</button>
+                <button id="add-player-btn" class="secondary-btn" type="button">+ Додати гравця</button>
+                <button id="remove-player-btn" class="secondary-btn" type="button">− Прибрати гравця</button>
               </div>
             </div>
 
@@ -43,19 +43,19 @@
               <p class="muted">Обери кількість раундів.</p>
               <label class="field-label" for="rounds-count">Кількість раундів</label>
               <select id="rounds-count">
-                <option value="1">1 round</option>
-                <option value="2">2 rounds</option>
-                <option value="3" selected>3 rounds</option>
+                <option value="1">1 раунд</option>
+                <option value="2">2 раунди</option>
+                <option value="3" selected>3 раунди</option>
               </select>
 
               <ul id="round-legend" class="round-legend"></ul>
 
               <div class="info-box" id="expected-sets-box">
-                4 players × 3 rounds = 12 word sets
+                4 гравці × 3 раунди = 12 наборів слів
               </div>
 
               <button id="build-word-fields-btn" class="primary-btn full-width" type="button">
-                Create word fields
+                Створити поля для слів
               </button>
             </div>
           </div>
@@ -64,10 +64,10 @@
         <div id="words-panel" class="panel hidden">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">Step 2</p>
+              <p class="eyebrow">Крок 2</p>
               <h2>Слова</h2>
             </div>
-            <span id="word-sets-progress" class="pill">0/0 valid sets</span>
+            <span id="word-sets-progress" class="pill">Готові набори: 0/0</span>
           </div>
 
           <p class="muted">
@@ -79,13 +79,13 @@
             <summary>
               <span>
                 <strong>Промпт для генерації слів</strong>
-                <span class="muted">Згенеруй усі набори слів за допомогою AI-асистента</span>
+                <span class="muted">Згенеруй усі набори слів за допомогою ШІ-асистента</span>
               </span>
-              <button id="copy-prompt-btn" class="secondary-btn" type="button">Copy prompt</button>
+              <button id="copy-prompt-btn" class="secondary-btn" type="button">Копіювати промпт</button>
             </summary>
             <p class="muted">
               Кількість гравців і раундів уже підставлена з твоїх налаштувань.
-              Встав промпт у AI-асистента й отримай готові набори слів.
+              Встав промпт у ШІ-асистента й отримай готові набори слів.
             </p>
             <textarea id="prompt-text" class="prompt-text" readonly spellcheck="false"></textarea>
           </details>
@@ -95,7 +95,7 @@
           <div id="validation-summary" class="validation-summary hidden"></div>
 
           <div class="sticky-actions">
-            <button id="start-game-btn" class="primary-btn" type="button">Start game</button>
+            <button id="start-game-btn" class="primary-btn" type="button">Почати гру</button>
           </div>
         </div>
       </section>
@@ -106,7 +106,7 @@
             <div class="panel compact">
               <div class="section-heading tight">
                 <div>
-                  <p class="eyebrow">Score</p>
+                  <p class="eyebrow">Рахунок</p>
                   <h2>Рахунок</h2>
                 </div>
               </div>
@@ -116,7 +116,7 @@
             <div class="panel compact">
               <div class="section-heading tight">
                 <div>
-                  <p class="eyebrow">Order</p>
+                  <p class="eyebrow">Порядок</p>
                   <h2>Порядок</h2>
                 </div>
               </div>
@@ -126,7 +126,7 @@
             <div class="panel compact">
               <div class="section-heading tight">
                 <div>
-                  <p class="eyebrow">Log</p>
+                  <p class="eyebrow">Журнал</p>
                   <h2>Останні події</h2>
                 </div>
               </div>
